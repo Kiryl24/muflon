@@ -4,7 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9f4315e8-c206-4856-b05b-f80f441fa045" name="Changes" comment="" />
+    <list default="true" id="9f4315e8-c206-4856-b05b-f80f441fa045" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Data1.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Data2.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/muflon/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/muflon/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/muflon/io.py" beforeDir="false" afterPath="$PROJECT_DIR$/muflon/io.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -18,6 +27,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$/../muflon_project" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectColorInfo">{
@@ -31,26 +45,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;Python.Main_block_depreciated.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/kub-k/Desktop/WSIZ/Praca naukowa - Matematyka/ProjektMacierze/Old_Scripts&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.Main_block_depreciated.executor": "Run",
+    "Python.main.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "C:/Users/kub-k/Desktop/WSIZ/Praca naukowa - Matematyka/muflon",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\kub-k\Desktop\WSIZ\Praca naukowa - Matematyka\muflon" />
+      <recent name="C:\Users\kub-k\Desktop\WSIZ\Praca naukowa - Matematyka\muflon\Preparing_for_deployment" />
       <recent name="C:\Users\kub-k\Desktop\WSIZ\Praca naukowa - Matematyka\ProjektMacierze\Old_Scripts" />
       <recent name="C:\Users\kub-k\Desktop\WSIZ\Praca naukowa - Matematyka\ProjektMacierze" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\kub-k\Desktop\WSIZ\Praca naukowa - Matematyka\ProjektMacierze\Preparing_for_deployment" />
-      <recent name="C:\Users\kub-k\Desktop\WSIZ\Praca naukowa - Matematyka\ProjektMacierze" />
+      <recent name="C:\Users\kub-k\Desktop\WSIZ\Praca naukowa - Matematyka\muflon\muflon" />
+      <recent name="C:\Users\kub-k\Desktop\WSIZ\Praca naukowa - Matematyka\muflon_project\muflon" />
+      <recent name="C:\Users\kub-k\Desktop\WSIZ\Praca naukowa - Matematyka\muflon_project\vfv" />
+      <recent name="C:\Users\kub-k\Desktop\WSIZ\Praca naukowa - Matematyka\muflon" />
+      <recent name="C:\Users\kub-k\Desktop\WSIZ\Praca naukowa - Matematyka\muflon\Old_Scripts" />
     </key>
   </component>
   <component name="RunManager">
@@ -63,6 +83,7 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
+      <option name="SDK_NAME" value="cuda" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -93,16 +114,5 @@
       <updated>1768895545864</updated>
     </task>
     <servers />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/main.py</url>
-          <line>8</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
