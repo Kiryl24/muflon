@@ -1,8 +1,9 @@
 import numpy as np
 
 from muflon.io import parse_data_to_matrices, save_results_to_csv
-from muflon.operations import fuzzy_composition_multi, solve_fuzzy_vector
-from muflon.norms import get_norm, NORM_MAP
+from muflon import fuzzy_composition_multi, solve_fuzzy_vector
+from muflon import get_norm
+
 
 def get_data_wrapper(filename, col_start, col_end, header_rows=0):
     """Wrapper to handle loading using your library's io module"""

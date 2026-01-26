@@ -46,11 +46,12 @@ Here is a minimal script to load data, perform a standard Max-Min composition, a
 ```python
 import numpy as np
 from muflon.io import parse_data_to_matrices, save_results_to_csv
-from muflon.operations import fuzzy_composition, solve_vector
-from muflon.norms import get_norm
+from muflon import fuzzy_composition, solve_vector
+from muflon import get_norm
 
 # Load Data
 import pandas as pd
+
 df = pd.read_csv('data.csv', sep=';', header=None)
 
 # Parse into Mu and Nu Matrices
@@ -133,14 +134,17 @@ The function must accept two arguments (`x`, `y`).
 It must work with `NumPy` arrays (use `np.maximum`, `np.where`, etc., instead of standard `max` or if).
 
 Example code:
+
 ```python
 import numpy as np
-from muflon.operations import fuzzy_composition
+from muflon import fuzzy_composition
+
 
 # 1. Define your custom operator (e.g., Einstein Product)
 def t_einstein(x, y):
     """Calculates (x * y) / (2 - (x + y - x*y))"""
     return (x * y) / (2 - (x + y - x * y))
+
 
 # 2. Pass the function directly to the composition tool
 result = fuzzy_composition(matrix_A, matrix_B, operator=t_einstein, aggregator=np.max)
@@ -185,17 +189,19 @@ def get_norm(identifier):
 Now You can use your new string identifier anywhere in your project.
 
 ```python
-from muflon.norms import get_norm
+from muflon import get_norm
 
 res = fuzzy_composition(A, B, operator='T_HAMACHER', aggregator=np.max)
 ```
 Example usage script for library:
+
 ```python
 import numpy as np
 
 from muflon.io import parse_data_to_matrices, save_results_to_csv
-from muflon.operations import fuzzy_composition_multi, solve_fuzzy_vector
-from muflon.norms import get_norm, NORM_MAP
+from muflon import fuzzy_composition_multi, solve_fuzzy_vector
+from muflon import get_norm, NORM_MAP
+
 
 def get_data_wrapper(filename, col_start, col_end, header_rows=0):
     """Wrapper to handle loading using your library's io module"""
@@ -216,7 +222,6 @@ def run_multiplication(file1, range1, header1, file2, range2, header2):
     B_mu, B_nu = get_data_wrapper(file2, range2[0], range2[1], header_rows=header2)
 
     if A_mu is None: return
-
 
     t_norm = get_norm('T_M')  # Min
     s_conorm = get_norm('S_M')  # Max

@@ -2,13 +2,13 @@ from setuptools import setup, find_packages
 
 setup(
     name="muflon",
-    version="0.1.0",
+    version="1.0.0",
     description="Matrix Utility for Fuzzy Logic Operations and Norms",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     author="YJakub Kiryła",
     author_email="kub-kir@wp.pl",
-    url="https://github.com/Kiryl24/muflon",  # Update this!
+    url="https://github.com/Kiryl24/muflon",
     packages=find_packages(),
     install_requires=[
         "numpy>=1.20.0",
@@ -19,5 +19,5 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.7',
+    python_requires='>=3.10',
 )
