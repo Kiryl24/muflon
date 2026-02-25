@@ -70,69 +70,58 @@ def get_reduced_matrix(A, x, b, norm_func, mode='eq'):
 def get_binarized_matrix(A_reduced):
     return np.where(A_reduced > 0, 1.0, 0.0)
 
-
 def find_minimal_vectors(A, b, A_reduced, di_norm_func, norm_func, mode='eq'):
 
     rows_A, cols_A = A.shape
     b_flat = b.flatten()
 
-    valid_cols_per_row = []
-    for i in range(rows_A):
-        if b_flat[i] == 0:
-            valid_cols_per_row.append([None])
-        else:
-            valid_cols = np.where(A_reduced[i] > 0)[0].tolist()
-            if not valid_cols:
-                return []
-            valid_cols_per_row.append(valid_cols)
+    valid_rows = [i for i in range(rows_A) if b_flat[i] > 0]
 
-    all_combinations = list(itertools.product(*valid_cols_per_row))
+    valid_rows.sort(key=lambda x: b_flat[x], reverse=True)
 
-    potential_vectors = []
+    potential_results = []
 
-    for combo in all_combinations:
-        v = np.zeros(cols_A)
-        for i, j in enumerate(combo):
-            if j is None:
-                continue
+    def step(current_V, current_K, current_v):
+        if not current_V:
+            potential_results.append(current_v.copy())
+            return
 
-            val = di_norm_func(A[i, j], b_flat[i])
+        i = current_V[0]
 
-            v[j] = max(v[j], val)
+        valid_cols = [j for j in range(cols_A) if A_reduced[i, j] > 0]
 
-        potential_vectors.append(v)
+        if not valid_cols:
+            return
 
-    valid_vectors = []
-    for v in potential_vectors:
-        A_v = np.zeros(rows_A)
-        for i in range(rows_A):
-            A_v[i] = np.max([norm_func(A[i, k], v[k]) for k in range(cols_A)])
+        for k_i in valid_cols:
+            v_next = current_v.copy()
 
-        is_valid = True
-        for i in range(rows_A):
-            if mode == 'eq':
-                if not np.isclose(A_v[i], b_flat[i], atol=1e-6):
-                    is_valid = False;
-                    break
-            elif mode == 'ge':
-                if A_v[i] < b_flat[i] - 1e-6:
-                    is_valid = False;
-                    break
+            val = di_norm_func(A[i, k_i], b_flat[i])
+            v_next[k_i] = max(v_next[k_i], val)
 
-        if is_valid:
-            valid_vectors.append(v)
+            K_next = current_K.union({k_i})
+
+            V_next = []
+            for s in current_V:
+                if s == i:
+                    continue
+
+                if norm_func(A[s, k_i], v_next[k_i]) < b_flat[s] - 1e-6:
+                    V_next.append(s)
+
+            step(V_next, K_next, v_next)
+
+    step(valid_rows, set(), np.zeros(cols_A))
 
     minimal_vectors = []
-    for v in valid_vectors:
+    for v in potential_results:
         is_minimal = True
-        for other_v in valid_vectors:
-
+        for other_v in potential_results:
             if np.all(other_v <= v + 1e-6) and not np.allclose(v, other_v, atol=1e-6):
                 is_minimal = False
                 break
 
         if is_minimal:
-
             if not any(np.allclose(v, mv, atol=1e-6) for mv in minimal_vectors):
                 minimal_vectors.append(v)
 
