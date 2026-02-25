@@ -42,7 +42,7 @@ def save_minimal_vectors(min_mu, min_nu, filename="Result_Vector_Min.csv"):
 
     max_len = max(len(min_mu), len(min_nu))
     if max_len == 0:
-        print("Brak minimalnych wektorów do zapisania.")
+        print("No minimal vectors for saving")
         return
 
     vec_length = len(min_mu[0]) if min_mu else len(min_nu[0])
@@ -59,7 +59,7 @@ def save_minimal_vectors(min_mu, min_nu, filename="Result_Vector_Min.csv"):
     df = pd.DataFrame(combined_data).T
     headers = [f"v_{i + 1}" for i in range(max_len)]
     df.to_csv(filename, sep=';', index=False, header=headers)
-    print(f"Zapisano rozwiązania minimalne do: {filename}")
+    print(f"Saved min output to: {filename}")
 
 
 def run_finding_vector(file_matrix, range_matrix, header_matrix, file_vector, range_vector, header_vector):
