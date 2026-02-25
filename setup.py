@@ -2,11 +2,11 @@ from setuptools import setup, find_packages
 
 setup(
     name="muflon",
-    version="1.0.0",
+    version="1.1.7",
     description="Matrix Utility for Fuzzy Logic Operations and Norms",
-    long_description=open("README.md").read(),
+    long_description=open("README.md", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
-    author="YJakub Kiryła",
+    author="Jakub Kiryła",
     author_email="kub-kir@wp.pl",
     url="https://github.com/Kiryl24/muflon",
     packages=find_packages(),
