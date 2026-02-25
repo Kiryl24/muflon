@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import os
+
 
 def parse_data_to_matrices(df_subset):
     """
@@ -16,6 +16,7 @@ def parse_data_to_matrices(df_subset):
     raw_strings = df_subset.to_numpy(dtype=str)
 
     def parse_cell(cell):
+
         s = str(cell).strip()
         s = s.replace('(', '').replace(')', '').replace('[', '').replace(']', '')
         s = s.replace(' ', '')
@@ -24,9 +25,11 @@ def parse_data_to_matrices(df_subset):
 
         try:
             v1 = float(parts[0])
+
             v2 = float(parts[1]) if len(parts) > 1 else 0.0
             return (v1, v2)
         except ValueError:
+
             return (0.0, 0.0)
 
     v_parse = np.vectorize(parse_cell, otypes=[object])
@@ -40,18 +43,17 @@ def parse_data_to_matrices(df_subset):
 
 def save_results_to_csv(mu_matrix, nu_matrix, filename="Result.csv"):
     """
-    Saves the results into two separate files based on the provided filename.
-    Example: if filename="Output.csv", it saves "Output_Mu.csv" and "Output_Nu.csv".
+    Combines the two result matrices back into the 'mu, nu' string format
+    and saves to CSV with semicolon delimiters.
     """
+    rows, cols = mu_matrix.shape
+    combined_data = np.empty((rows, cols), dtype=object)
 
-    base, ext = os.path.splitext(filename)
-    if not ext:
-        ext = ".csv"
+    for i in range(rows):
+        for j in range(cols):
+            combined_data[i, j] = f"{mu_matrix[i, j]:.4f}, {nu_matrix[i, j]:.4f}"
 
-    file_mu = f"{base}_Mu{ext}"
-    pd.DataFrame(mu_matrix).to_csv(file_mu, sep=';', index=False, header=False)
-    print(f"Saved Mu: {file_mu}")
+    df = pd.DataFrame(combined_data)
 
-    file_nu = f"{base}_Nu{ext}"
-    pd.DataFrame(nu_matrix).to_csv(file_nu, sep=';', index=False, header=False)
-    print(f"Saved Nu: {file_nu}")
+    df.to_csv(filename, sep=';', index=False, header=False)
+    print(f"File saved: {filename}")

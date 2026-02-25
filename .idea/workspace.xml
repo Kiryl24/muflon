@@ -5,14 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9f4315e8-c206-4856-b05b-f80f441fa045" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Data1.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Data2.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/muflon/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/muflon/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/muflon/io.py" beforeDir="false" afterPath="$PROJECT_DIR$/muflon/io.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/muflon/norms.py" beforeDir="false" afterPath="$PROJECT_DIR$/muflon/norms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/muflon/operations.py" beforeDir="false" afterPath="$PROJECT_DIR$/muflon/operations.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyproject.toml" beforeDir="false" afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,19 +44,19 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Python.Main_block_depreciated.executor": "Run",
-    "Python.main.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/kub-k/Desktop/WSIZ/Praca naukowa - Matematyka/muflon",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.Main_block_depreciated.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/kub-k/Desktop/WSIZ/Praca naukowa - Matematyka/muflon&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\kub-k\Desktop\WSIZ\Praca naukowa - Matematyka\muflon" />
@@ -66,11 +65,11 @@
       <recent name="C:\Users\kub-k\Desktop\WSIZ\Praca naukowa - Matematyka\ProjektMacierze" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\kub-k\Desktop\WSIZ\Praca naukowa - Matematyka\ProjektMacierze" />
+      <recent name="C:\Users\kub-k\Desktop\WSIZ\Praca naukowa - Matematyka\ProjektMacierze\src" />
       <recent name="C:\Users\kub-k\Desktop\WSIZ\Praca naukowa - Matematyka\muflon\muflon" />
       <recent name="C:\Users\kub-k\Desktop\WSIZ\Praca naukowa - Matematyka\muflon_project\muflon" />
       <recent name="C:\Users\kub-k\Desktop\WSIZ\Praca naukowa - Matematyka\muflon_project\vfv" />
-      <recent name="C:\Users\kub-k\Desktop\WSIZ\Praca naukowa - Matematyka\muflon" />
-      <recent name="C:\Users\kub-k\Desktop\WSIZ\Praca naukowa - Matematyka\muflon\Old_Scripts" />
     </key>
   </component>
   <component name="RunManager">

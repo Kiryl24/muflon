@@ -1,7 +1,7 @@
 import numpy as np
 
 
-# --- T-NORMS (Triangular Norms)
+# --- T-NORMS (Triangular Norms) ---
 
 
 def t_M(x, y):
@@ -31,7 +31,7 @@ def t_FD(x, y):
     return np.where(x + y <= 1, 0, np.minimum(x, y))
 
 
-# --- S-CONORMS (Triangular Conorms)
+# --- S-CONORMS (Triangular Conorms) ---
 
 
 def s_M(x, y):
@@ -60,7 +60,7 @@ def s_FD(x, y):
     # 1 if x+y >= 1, else max(x,y)
     return np.where(x + y >= 1, 1, np.maximum(x, y))
 
-# --- INDUCED IMPLICATIONS [cite: 157] ---
+# --- INDUCED IMPLICATIONS ---
 
 def i_TM(a, b):
     """Implication induced by T_M (Godel implication)"""
@@ -88,7 +88,24 @@ def i_FP(a, b):
 
     return np.where(a <= b, 1.0, np.maximum(1 - a, b))
 
+# --- Dual IMPLICATIONS ---
 
+def di_TM(a, b):
+    """Dual implication induced by T_M (Minimum)"""
+    return b
+
+def di_TP(a, b):
+    """Dual implication induced by T_P (Product)"""
+    with np.errstate(divide='ignore', invalid='ignore'):
+        res = np.where(a != 0, b / a, b)
+        res = np.minimum(1.0, res)
+    return res
+
+def di_TL(a, b):
+    """Dual implication induced by T_L (Lukasiewicz)"""
+    res = np.minimum(1.0, 1.0 - a + b)
+    res = np.where((a == 0) & (b == 0), 0.0, res)
+    return res
 
 NORM_MAP = {
     # T-Norms
@@ -109,7 +126,12 @@ NORM_MAP = {
     'I_TM': i_TM,  # Induced by T_M
     'I_TP': i_TP,  # Induced by T_P
     'I_TL': i_TL,  # Induced by T_L
-    'I_FP': i_FP  # Induced by T_FP (Fodor)
+    'I_FP': i_FP,  # Induced by T_FP (Fodor)
+
+    # Dual Implications
+    'DI_TM': di_TM,
+    'DI_TP': di_TP,
+    'DI_TL': di_TL,
 }
 
 
