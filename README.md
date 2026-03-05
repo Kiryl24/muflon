@@ -215,23 +215,51 @@ from muflon import get_norm
 
 res = fuzzy_composition(A, B, operator='T_HAMACHER', aggregator=np.max)
 ```
+
+## Intuitionistic Fuzzy Sets (IFS) Validation
+A validation mechanism has been introduced to verify whether the calculated results form valid Intuitionistic Fuzzy Sets (IFS). 
+For each Membership ($\mu$) and Non-Membership ($\nu$) pair, the following condition must be met: $\mu + \nu \le 1$.
+The `validate_ifs(mu_matrix, nu_matrix)` function in the `operations.py` module handles this, returning a validity flag and a matrix of sums for debugging purposes.
+
+## Non-Membership ($\nu$) Complements
+Before executing key operations (such as finding minimal vectors or generating the reduced matrix) for the Nu stream, a matrix complement calculation step has been introduced.
+Every element of the $\nu$ matrix ($a_{ij}$) is transformed using the formula $1 - a_{ij}$. The resulting matrix (referred to as `Nu_prim`) is then subjected to further algebraic operations.
+
+## Reduced Matrices & Binarization
+Mechanisms for determining reduced matrices for equations and inequalities have been added to the `operations.py` module:
+* `get_reduced_matrix(A, x, b, norm_func, mode)`: Generates the reduced matrix $A'_b(x)$ based on the provided solution, norm, and mode (equation `eq` or inequality `ge`).
+* `get_binarized_matrix(A_reduced)`: Transforms the calculated reduced matrix into a zero-one binary matrix (all values $> 0$ become `1.0`, and the rest become `0.0`).
+
+## Minimal Vectors Search
+A tree-search algorithm has been implemented to find all minimal solutions for the system of equations/inequalities:
+* `find_minimal_vectors(A, b, A_reduced, di_norm_func, norm_func, mode='eq')` 
+This function relies on the reduced matrix and dual implications. It is equipped with additional debugging mechanisms that print to the console when the set of potential vectors is empty (e.g., due to a lack of valid paths for the given boundary conditions).
+
+## Dual Implications
+The operator library in the `norms.py` module has been expanded to include dual implications (required for finding minimal vectors):
+* `DI_TM`: Dual implication for the Minimum norm.
+* `DI_TP`: Dual implication for the Product norm.
+* `DI_TL`: Dual implication for the Lukasiewicz norm.
+The `NORM_MAP` registry has been updated with these keys, as well as specific operators used for research testing (e.g., `OP_EX11`, `IMP_EX11`, `DIMP_EX11`).
+
+## Example Validation Mode
+A dedicated `test_paper_example_11()` function has been added to `main.py`.It executes step-by-step mathematical calculations for a custom operation ($x \cdot \min(x,y)$), replicating the values and steps (determining the greatest solution $u$, the reduced matrix, binarization, and minimal vectors $v$) exactly as presented in Example 11 of the scientific literature.
+
+
 Example usage script for library:
 
 ```python
 import numpy as np
-import pandas as pd
 
 from muflon.io import parse_data_to_matrices, save_results_to_csv
-from muflon.operations import (
-    fuzzy_composition_multi, 
-    solve_fuzzy_vector,
-    get_reduced_matrix,
-    get_binarized_matrix,
-    find_minimal_vectors
-)
-from muflon.norms import get_norm
+from muflon.operations import fuzzy_composition_multi, solve_fuzzy_vector, get_reduced_matrix, validate_ifs, \
+    find_minimal_vectors, get_binarized_matrix
+from muflon.norms import get_norm, NORM_MAP
+
 
 def get_data_wrapper(filename, col_start, col_end, header_rows=0):
+    """Wrapper to handle loading using your library's io module"""
+    import pandas as pd
     try:
         df = pd.read_csv(filename, sep=';', header=None, skiprows=header_rows)
         df_subset = df.iloc[:, col_start:col_end]
@@ -240,62 +268,109 @@ def get_data_wrapper(filename, col_start, col_end, header_rows=0):
         print(f"Error reading {filename}: {e}")
         return None, None
 
-def save_minimal_vectors(min_mu, min_nu, filename="Result_Vector_Min.csv"):
-    max_len = max(len(min_mu), len(min_nu))
-    if max_len == 0: return
-        
-    vec_length = len(min_mu[0]) if min_mu else len(min_nu[0])
-    combined_data = []
-    
-    for v_idx in range(max_len):
-        col_data = []
-        for row_idx in range(vec_length):
-            mu_val = min_mu[v_idx][row_idx] if v_idx < len(min_mu) else 0.0
-            nu_val = min_nu[v_idx][row_idx] if v_idx < len(min_nu) else 0.0
-            col_data.append(f"{mu_val:.4f}, {nu_val:.4f}")
-        combined_data.append(col_data)
-        
-    df = pd.DataFrame(combined_data).T
-    headers = [f"v_{i+1}" for i in range(max_len)]
-    df.to_csv(filename, sep=';', index=False, header=headers)
+
+def run_multiplication(file1, range1, header1, file2, range2, header2):
+    print(f"\nRUNNING MODE: MULTIPLICATION")
+
+    A_mu, A_nu = get_data_wrapper(file1, range1[0], range1[1], header_rows=header1)
+    B_mu, B_nu = get_data_wrapper(file2, range2[0], range2[1], header_rows=header2)
+
+    if A_mu is None: return
+
+    t_norm = get_norm('T_M')  # Min
+    s_conorm = get_norm('S_M')  # Max
+
+    print("Computing Mu (First values)")
+    res_mu = fuzzy_composition_multi(A_mu, B_mu, [t_norm], np.max)
+
+    print("Computing Nu (Second values)")
+    res_nu = fuzzy_composition_multi(A_nu, B_nu, [s_conorm], np.min)
+
+    save_results_to_csv(res_mu, res_nu, "Result_Multiplication.csv")
+
 
 def run_finding_vector(file_matrix, range_matrix, header_matrix, file_vector, range_vector, header_vector):
+    print(f"\nRUNNING MODE: FINDING VECTOR")
+
     A_mu, A_nu = get_data_wrapper(file_matrix, range_matrix[0], range_matrix[1], header_matrix)
     b_mu, b_nu = get_data_wrapper(file_vector, range_vector[0], range_vector[1], header_vector)
 
     if A_mu is None: return
 
-    # Setup norms, implications, and dual implications
-    norm_mu = get_norm('T_M')
     imp_func_mu = get_norm('I_TM')
-    di_func_mu = get_norm('DI_TM')
-
-    norm_nu = get_norm('S_M')  
     imp_func_nu = get_norm('I_TL')
-    di_func_nu = get_norm('DI_TL') 
 
-    # 1. Compute maximal vectors (u)
+    print("Computing vector x for Mu")
     res_x_mu = solve_fuzzy_vector(A_mu, b_mu, imp_func_mu, np.min)
+
+    print("Computing vector x for Nu")
     res_x_nu = solve_fuzzy_vector(A_nu, b_nu, imp_func_nu, np.max)
-    save_results_to_csv(res_x_mu, res_x_nu, "Result_Vector_Max.csv")
 
-    # 2. Compute reduced & binarized matrices
-    A_red_mu = get_reduced_matrix(A_mu, res_x_mu, b_mu, norm_mu, mode='eq')
-    A_bin_mu = get_binarized_matrix(A_red_mu)
-    
-    A_red_nu = get_reduced_matrix(A_nu, res_x_nu, b_nu, norm_nu, mode='eq')
-    A_bin_nu = get_binarized_matrix(A_red_nu)
+    save_results_to_csv(res_x_mu, res_x_nu, "Result_Vector.csv")
 
-    # 3. Find all minimal vectors (S^0)
-    min_vectors_mu = find_minimal_vectors(A_mu, b_mu, A_red_mu, di_func_mu, norm_mu, mode='eq')
-    min_vectors_nu = find_minimal_vectors(A_nu, b_nu, A_red_nu, di_func_nu, norm_nu, mode='eq')
-    
-    # 4. Save minimal solutions
-    save_minimal_vectors(min_vectors_mu, min_vectors_nu, "Result_Vector_Min.csv")
+
+def test_paper_example_11():
+    print("\n=== RUNNING PAPER EXAMPLE 11 (VALIDATION) ===")
+
+    A = np.array([
+        [1.0, 0.8, 0.5, 0.75],
+        [0.75, 0.8, 0.1, 1.0],
+        [0.2, 0.3, 0.6, 0.4],
+        [0.4, 0.5, 0.6, 0.5]
+    ])
+    b = np.array([[0.8], [0.6], [0.3], [0.3]])
+
+    norm_func = get_norm('OP_EX11')
+    imp_func = get_norm('IMP_EX11')
+    dimp_func = get_norm('DIMP_EX11')
+
+    u = solve_fuzzy_vector(A, b, imp_func, np.min)
+    print("1. OCalculated maximal solution u:")
+    print(u.flatten())
+
+    A_prime = get_reduced_matrix(A, u, b, norm_func, mode='eq')
+    print("\n2. Reduced matrix A'_b(u):")
+    print(A_prime)
+
+
+    A_prime_bin = get_binarized_matrix(A_prime)
+    print("\n3. Binarized reduced matrix A'_b(u):")
+    print(A_prime_bin)
+
+
+    min_vecs = find_minimal_vectors(A, b, A_prime, dimp_func, norm_func)
+    print("\n4. Calculated minimal vectors Alg(u):")
+    for idx, vec in enumerate(min_vecs):
+        print(f"v^{idx + 1} =", vec)
+
+
+def run_ifs_validation_demo():
+    print("\nRUNNING IFS VALIDATION DEMO")
+    x_mu = np.array([[0.8], [0.5], [0.2]])
+    x_nu = np.array([[0.1], [0.5], [0.9]])
+
+    is_valid, sums = validate_ifs(x_mu, x_nu)
+
+    print(f"Proper IFS? {is_valid}")
+    if not is_valid:
+        print("Err: sum is over 1 in example:")
+        print(sums)
+
 
 if __name__ == "__main__":
-    run_finding_vector(
-        file_matrix='Data1.csv', range_matrix=(0, 2), header_matrix=1,
-        file_vector='Data2.csv', range_vector=(0, 1), header_vector=1
-    )
+    try:
+        run_multiplication(
+            file1='Data1.csv', range1=(0, 2), header1=1,
+            file2='Data2.csv', range2=(0, 1), header2=1
+        )
+        run_finding_vector(
+            file_matrix='Data1.csv', range_matrix=(0, 2), header_matrix=1,
+            file_vector='Data2.csv', range_vector=(0, 1), header_vector=1
+        )
+
+        test_paper_example_11()
+        run_ifs_validation_demo()
+
+    except Exception as e:
+        print(f"Execution failed: {e}")
 ```

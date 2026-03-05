@@ -1,8 +1,10 @@
-import itertools
 import numpy as np
 
 
 def fuzzy_composition_multi(A, B, operator_list, aggregator_func):
+    """
+    Calculates [C] = [A] * [B]
+    """
     rows_A, cols_A = A.shape
     rows_B, cols_B = B.shape
 
@@ -25,6 +27,10 @@ def fuzzy_composition_multi(A, B, operator_list, aggregator_func):
 
 
 def solve_fuzzy_vector(A, b, impl_func, aggregator_func):
+    """
+    Finds vector x in equation: A * x = b
+    Using Theorem 9: g_j = Aggregator_i( Implication(a_ij, b_i) )
+    """
     rows_A, cols_A = A.shape
     rows_b = b.shape[0]
 
@@ -70,13 +76,13 @@ def get_reduced_matrix(A, x, b, norm_func, mode='eq'):
 def get_binarized_matrix(A_reduced):
     return np.where(A_reduced > 0, 1.0, 0.0)
 
+
 def find_minimal_vectors(A, b, A_reduced, di_norm_func, norm_func, mode='eq'):
 
     rows_A, cols_A = A.shape
     b_flat = b.flatten()
 
     valid_rows = [i for i in range(rows_A) if b_flat[i] > 0]
-
     valid_rows.sort(key=lambda x: b_flat[x], reverse=True)
 
     potential_results = []
@@ -87,7 +93,6 @@ def find_minimal_vectors(A, b, A_reduced, di_norm_func, norm_func, mode='eq'):
             return
 
         i = current_V[0]
-
         valid_cols = [j for j in range(cols_A) if A_reduced[i, j] > 0]
 
         if not valid_cols:
@@ -95,23 +100,25 @@ def find_minimal_vectors(A, b, A_reduced, di_norm_func, norm_func, mode='eq'):
 
         for k_i in valid_cols:
             v_next = current_v.copy()
-
             val = di_norm_func(A[i, k_i], b_flat[i])
             v_next[k_i] = max(v_next[k_i], val)
 
             K_next = current_K.union({k_i})
-
             V_next = []
+
             for s in current_V:
                 if s == i:
                     continue
-
-                if norm_func(A[s, k_i], v_next[k_i]) < b_flat[s] - 1e-6:
+                if norm_func(A_reduced[s, k_i], v_next[k_i]) < b_flat[s] - 1e-6:
                     V_next.append(s)
 
             step(V_next, K_next, v_next)
 
     step(valid_rows, set(), np.zeros(cols_A))
+
+    if not potential_results:
+        print("DEBUG: No potential vectors found.")
+        return []
 
     minimal_vectors = []
     for v in potential_results:
@@ -125,4 +132,15 @@ def find_minimal_vectors(A, b, A_reduced, di_norm_func, norm_func, mode='eq'):
             if not any(np.allclose(v, mv, atol=1e-6) for mv in minimal_vectors):
                 minimal_vectors.append(v)
 
+    if not minimal_vectors:
+        print("DEBUG: After filtration set the of minimal vectors is empty.")
+
     return minimal_vectors
+
+def validate_ifs(mu_matrix, nu_matrix, tolerance=1e-6):
+    """
+     mu + nu <= 1.
+    """
+    sum_matrix = mu_matrix + nu_matrix
+    is_valid = np.all(sum_matrix <= 1.0 + tolerance)
+    return is_valid, sum_matrix

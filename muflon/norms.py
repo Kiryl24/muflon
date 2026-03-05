@@ -107,6 +107,23 @@ def di_TL(a, b):
     res = np.where((a == 0) & (b == 0), 0.0, res)
     return res
 
+# --- CUSTOM OPERATIONS FOR PAPER EXAMPLE 11 ---
+def op_ex11(a, b):
+    """Operation: a * b = a * min(a, b)"""
+    return a * np.minimum(a, b)
+
+def imp_ex11(a, b):
+    """Implication for Example 11"""
+    with np.errstate(divide='ignore', invalid='ignore'):
+        res = np.where(a**2 <= b, 1.0, b / a)
+    return res
+
+def dimp_ex11(a, b):
+    """Dual implication for Example 11"""
+    with np.errstate(divide='ignore', invalid='ignore'):
+        res = np.where(a**2 > b, b / a, a)
+    return res
+
 NORM_MAP = {
     # T-Norms
     'T_M': t_M,  # Minimum
@@ -132,6 +149,11 @@ NORM_MAP = {
     'DI_TM': di_TM,
     'DI_TP': di_TP,
     'DI_TL': di_TL,
+
+    # Custom operations
+    'OP_EX11': op_ex11,
+    'IMP_EX11': imp_ex11,
+    'DIMP_EX11': dimp_ex11,
 }
 
 
