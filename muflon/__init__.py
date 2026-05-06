@@ -1,3 +1,3 @@
-from .io import parse_data_to_matrices, save_results_to_csv
-from .operations import fuzzy_composition_multi, solve_fuzzy_vector, get_reduced_matrix, get_binarized_matrix, find_minimal_vectors
+from .io import parse_data_to_matrices, save_separate_results_to_csv, save_joined_results_to_csv
+from .operations import fuzzy_composition_multi, solve_fuzzy_vector, fuzzy_composition_joined, solve_fuzzy_vector_joined
 from .norms import get_norm

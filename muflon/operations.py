@@ -144,3 +144,30 @@ def validate_ifs(mu_matrix, nu_matrix, tolerance=1e-6):
     sum_matrix = mu_matrix + nu_matrix
     is_valid = np.all(sum_matrix <= 1.0 + tolerance)
     return is_valid, sum_matrix
+
+def combine_to_tuples(mu_matrix, nu_matrix):
+    """
+    Combination back to tuples.
+    """
+    rows, cols = mu_matrix.shape
+    combined = np.empty((rows, cols), dtype=object)
+    for i in range(rows):
+        for j in range(cols):
+            combined[i, j] = (mu_matrix[i, j], nu_matrix[i, j])
+    return combined
+
+def fuzzy_composition_joined(A_mu, A_nu, B_mu, B_nu, t_norm_list, s_conorm_list):
+    """
+    Composition and output to tuples.
+    """
+    res_mu = fuzzy_composition_multi(A_mu, B_mu, t_norm_list, np.max)
+    res_nu = fuzzy_composition_multi(A_nu, B_nu, s_conorm_list, np.min)
+    return combine_to_tuples(res_mu, res_nu)
+
+def solve_fuzzy_vector_joined(A_mu, A_nu, b_mu, b_nu, imp_func_mu, imp_func_nu):
+    """
+    Finding vector and output to tuples
+    """
+    res_x_mu = solve_fuzzy_vector(A_mu, b_mu, imp_func_mu, np.min)
+    res_x_nu = solve_fuzzy_vector(A_nu, b_nu, imp_func_nu, np.max)
+    return combine_to_tuples(res_x_mu, res_x_nu)
