@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def fuzzy_composition_multi(A, B, operator_list, aggregator_func):
+def compose_component_matrices(A, B, component_ops, aggregation):
     """
     Calculates [C] = [A] * [B]
     """
@@ -18,15 +18,15 @@ def fuzzy_composition_multi(A, B, operator_list, aggregator_func):
             row_from_a = A[i, :]
             col_from_b = B[:, j]
             combined = [
-                operator_list[k % len(operator_list)](row_from_a[k], col_from_b[k])
+                component_ops[k % len(component_ops)](row_from_a[k], col_from_b[k])
                 for k in range(cols_A)
             ]
-            result[i, j] = aggregator_func(combined)
+            result[i, j] = aggregation(combined)
 
     return result
 
 
-def solve_fuzzy_vector(A, b, impl_func, aggregator_func):
+def solve_component_system(A, b, impl_func, aggregator_func):
     """
     Finds vector x in equation: A * x = b
     Using Theorem 9: g_j = Aggregator_i( Implication(a_ij, b_i) )
@@ -47,37 +47,37 @@ def solve_fuzzy_vector(A, b, impl_func, aggregator_func):
     return x_result.reshape(-1, 1)
 
 
-def get_reduced_matrix(A, x, b, norm_func, mode='eq'):
+def compute_reduced_matrix(A, x, b, norm_func, mode='eq'):
     rows_A, cols_A = A.shape
-    A_prime = np.zeros_like(A)
+    A_reduced = np.zeros_like(A)
 
-    b_flat = b.flatten()
-    x_flat = x.flatten()
+    b_component = b.flatten()
+    x_component = x.flatten()
 
     for i in range(rows_A):
         for j in range(cols_A):
-            val = norm_func(A[i, j], x_flat[j])
+            val = norm_func(A[i, j], x_component[j])
 
             if mode == 'eq':
-                condition = np.isclose(val, b_flat[i], atol=1e-6)
+                condition = np.isclose(val, b_component[i], atol=1e-6)
             elif mode == 'ge':
-                condition = val >= b_flat[i] - 1e-6
+                condition = val >= b_component[i] - 1e-6
             else:
                 raise ValueError("Mode must be 'eq' or 'ge'")
 
             if condition:
-                A_prime[i, j] = A[i, j]
+                A_reduced[i, j] = A[i, j]
             else:
-                A_prime[i, j] = 0.0
+                A_reduced[i, j] = 0.0
 
-    return A_prime
+    return A_reduced
 
 
-def get_binarized_matrix(A_reduced):
+def binarize_reduced_matrix(A_reduced):
     return np.where(A_reduced > 0, 1.0, 0.0)
 
 
-def find_minimal_vectors(A, b, A_reduced, di_norm_func, norm_func, mode='eq'):
+def find_minimal_component_solutions(A, b, A_reduced, di_norm_func, norm_func, mode='eq'):
 
     rows_A, cols_A = A.shape
     b_flat = b.flatten()
@@ -85,11 +85,11 @@ def find_minimal_vectors(A, b, A_reduced, di_norm_func, norm_func, mode='eq'):
     valid_rows = [i for i in range(rows_A) if b_flat[i] > 0]
     valid_rows.sort(key=lambda x: b_flat[x], reverse=True)
 
-    potential_results = []
+    candidate_minimal_solutions = []
 
     def step(current_V, current_K, current_v):
         if not current_V:
-            potential_results.append(current_v.copy())
+            candidate_minimal_solutions.append(current_v.copy())
             return
 
         i = current_V[0]
@@ -116,36 +116,36 @@ def find_minimal_vectors(A, b, A_reduced, di_norm_func, norm_func, mode='eq'):
 
     step(valid_rows, set(), np.zeros(cols_A))
 
-    if not potential_results:
+    if not candidate_minimal_solutions:
         print("DEBUG: No potential vectors found.")
         return []
 
-    minimal_vectors = []
-    for v in potential_results:
+    minimal_component_solutions = []
+    for v in candidate_minimal_solutions:
         is_minimal = True
-        for other_v in potential_results:
+        for other_v in candidate_minimal_solutions:
             if np.all(other_v <= v + 1e-6) and not np.allclose(v, other_v, atol=1e-6):
                 is_minimal = False
                 break
 
         if is_minimal:
-            if not any(np.allclose(v, mv, atol=1e-6) for mv in minimal_vectors):
-                minimal_vectors.append(v)
+            if not any(np.allclose(v, mv, atol=1e-6) for mv in minimal_component_solutions):
+                minimal_component_solutions.append(v)
 
-    if not minimal_vectors:
+    if not minimal_component_solutions:
         print("DEBUG: After filtration set the of minimal vectors is empty.")
 
-    return minimal_vectors
+    return minimal_component_solutions
 
-def validate_ifs(mu_matrix, nu_matrix, tolerance=1e-6):
+def validate_l_star_condition(membership_matrix, nonmembership_matrix, tolerance=1e-6):
     """
      mu + nu <= 1.
     """
-    sum_matrix = mu_matrix + nu_matrix
+    sum_matrix = membership_matrix + nonmembership_matrix
     is_valid = np.all(sum_matrix <= 1.0 + tolerance)
     return is_valid, sum_matrix
 
-def combine_to_tuples(mu_matrix, nu_matrix):
+def combine_components_to_ifs(mu_matrix, nu_matrix):
     """
     Combination back to tuples.
     """
@@ -156,18 +156,18 @@ def combine_to_tuples(mu_matrix, nu_matrix):
             combined[i, j] = (mu_matrix[i, j], nu_matrix[i, j])
     return combined
 
-def fuzzy_composition_joined(A_mu, A_nu, B_mu, B_nu, t_norm_list, s_conorm_list):
+def compose_ifs_matrices(A_mu, A_nu, B_mu, B_nu, membership_ops, nonmembership_ops):
     """
     Composition and output to tuples.
     """
-    res_mu = fuzzy_composition_multi(A_mu, B_mu, t_norm_list, np.max)
-    res_nu = fuzzy_composition_multi(A_nu, B_nu, s_conorm_list, np.min)
-    return combine_to_tuples(res_mu, res_nu)
+    membership_result = compose_component_matrices(A_mu, B_mu, membership_ops, np.max)
+    nonmembership_result = compose_component_matrices(A_nu, B_nu, nonmembership_ops, np.min)
+    return combine_components_to_ifs(membership_result, nonmembership_result)
 
-def solve_fuzzy_vector_joined(A_mu, A_nu, b_mu, b_nu, imp_func_mu, imp_func_nu):
+def solve_ifs_system_candidate(A_mu, A_nu, b_mu, b_nu, induced_implication_mu, dual_induced_implication_nu):
     """
     Finding vector and output to tuples
     """
-    res_x_mu = solve_fuzzy_vector(A_mu, b_mu, imp_func_mu, np.min)
-    res_x_nu = solve_fuzzy_vector(A_nu, b_nu, imp_func_nu, np.max)
-    return combine_to_tuples(res_x_mu, res_x_nu)
+    greatest_membership_solution = solve_component_system(A_mu, b_mu, induced_implication_mu, np.min)
+    least_nonmembership_solution = solve_component_system(A_nu, b_nu, dual_induced_implication_nu, np.max)
+    return combine_components_to_ifs(greatest_membership_solution, least_nonmembership_solution)

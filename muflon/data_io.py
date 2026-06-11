@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 
-def parse_data_to_matrices(df_subset):
+def parse_ifs_csv_to_components(df_subset):
 
     if df_subset.empty:
         return None, None
@@ -25,15 +25,15 @@ def parse_data_to_matrices(df_subset):
             return (0.0, 0.0)
 
     v_parse = np.vectorize(parse_cell, otypes=[object])
-    matrix_tuples = v_parse(raw_strings)
+    ifs_entries = v_parse(raw_strings)
 
-    matrix_mu = np.vectorize(lambda x: x[0], otypes=[float])(matrix_tuples)
-    matrix_nu = np.vectorize(lambda x: x[1], otypes=[float])(matrix_tuples)
+    matrix_mu = np.vectorize(lambda x: x[0], otypes=[float])(ifs_entries)
+    matrix_nu = np.vectorize(lambda x: x[1], otypes=[float])(ifs_entries)
 
     return matrix_mu, matrix_nu
 
 
-def save_separate_results_to_csv(mu_matrix, nu_matrix, filename="Result_Separate.csv"):
+def save_component_results_as_ifs_csv(mu_matrix, nu_matrix, filename="Result_Separate.csv"):
     rows, cols = mu_matrix.shape
     combined_data = np.empty((rows, cols), dtype=object)
 
@@ -46,13 +46,13 @@ def save_separate_results_to_csv(mu_matrix, nu_matrix, filename="Result_Separate
     print(f"File saved (from separate matrices): {filename}")
 
 
-def save_joined_results_to_csv(tuple_matrix, filename="Result_Joined.csv"):
-    rows, cols = tuple_matrix.shape
+def save_joined_results_to_csv(ifs_matrix, filename="Result_Joined.csv"):
+    rows, cols = ifs_matrix.shape
     combined_data = np.empty((rows, cols), dtype=object)
 
     for i in range(rows):
         for j in range(cols):
-            mu, nu = tuple_matrix[i, j]
+            mu, nu = ifs_matrix[i, j]
             combined_data[i, j] = f"{mu:.4f}, {nu:.4f}"
 
     df = pd.DataFrame(combined_data)

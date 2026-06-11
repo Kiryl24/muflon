@@ -62,13 +62,13 @@ def s_FD(x, y):
 
 # --- INDUCED IMPLICATIONS ---
 
-def i_TM(a, b):
+def imp_T_M(a, b):
     """Implication induced by T_M (Godel implication)"""
 
     return np.where(a <= b, 1.0, b)
 
 
-def i_TP(a, b):
+def imp_T_P(a, b):
     """Implication induced by T_P (Goguen implication)"""
 
     with np.errstate(divide='ignore', invalid='ignore'):
@@ -77,48 +77,45 @@ def i_TP(a, b):
     return res
 
 
-def i_TL(a, b):
+def imp_T_L(a, b):
     """Implication induced by T_L (Lukasiewicz implication)"""
 
     return np.minimum(1, 1 - a + b)
 
 
-def i_FP(a, b):
+def imp_T_FD(a, b):
     """Implication induced by T_FP (Fodor implication)"""
 
     return np.where(a <= b, 1.0, np.maximum(1 - a, b))
 
 # --- Dual IMPLICATIONS ---
 
-def di_TM(a, b):
+def dual_imp_S_M(a, b):
     """Dual implication induced by T_M (Minimum)"""
-    return b
+    return np.where(a >= b, 0.0, b)
 
-def di_TP(a, b):
+def dual_imp_S_P(a, b):
     """Dual implication induced by T_P (Product)"""
     with np.errstate(divide='ignore', invalid='ignore'):
-        res = np.where(a != 0, b / a, b)
-        res = np.minimum(1.0, res)
+        res = np.where(a >= b, 0.0, (b - a) / (1.0 - a))
     return res
 
-def di_TL(a, b):
+def dual_imp_S_L(a, b):
     """Dual implication induced by T_L (Lukasiewicz)"""
-    res = np.minimum(1.0, 1.0 - a + b)
-    res = np.where((a == 0) & (b == 0), 0.0, res)
-    return res
+    return np.maximum(0.0, b - a)
 
 # --- CUSTOM OPERATIONS FOR PAPER EXAMPLE 11 ---
-def op_ex11(a, b):
+def op_EX1(a, b):
     """Operation: a * b = a * min(a, b)"""
     return a * np.minimum(a, b)
 
-def imp_ex11(a, b):
+def IMP_EX1(a, b):
     """Implication for Example 11"""
     with np.errstate(divide='ignore', invalid='ignore'):
         res = np.where(a**2 <= b, 1.0, b / a)
     return res
 
-def dimp_ex11(a, b):
+def DIMP_EX1(a, b):
     """Dual implication for Example 11"""
     with np.errstate(divide='ignore', invalid='ignore'):
         res = np.where(a**2 > b, b / a, a)
@@ -140,24 +137,24 @@ NORM_MAP = {
     'S_FD': s_FD,  # Fodor
 
     # Implications
-    'I_TM': i_TM,  # Induced by T_M
-    'I_TP': i_TP,  # Induced by T_P
-    'I_TL': i_TL,  # Induced by T_L
-    'I_FP': i_FP,  # Induced by T_FP (Fodor)
+    'IMP_T_M': imp_T_M,  # Induced by T_M
+    'IMP_T_P': imp_T_P,  # Induced by T_P
+    'IMP_T_L': imp_T_L,  # Induced by T_L
+    'IMP_T_FD': imp_T_FD,  # Induced by T_FP (Fodor)
 
     # Dual Implications
-    'DI_TM': di_TM,
-    'DI_TP': di_TP,
-    'DI_TL': di_TL,
+    'DIMP_S_M': dual_imp_S_M,
+    'DIMP_S_P': dual_imp_S_P,
+    'DIMP_S_L': dual_imp_S_L,
 
     # Custom operations
-    'OP_EX11': op_ex11,
-    'IMP_EX11': imp_ex11,
-    'DIMP_EX11': dimp_ex11,
+    'OP_EX1': op_EX1,
+    'IMP_EX1': IMP_EX1,
+    'DIMP_EX1': DIMP_EX1,
 }
 
 
-def get_norm(identifier):
+def get_operator(identifier):
     """Retrieves a function by the paper's notation string."""
     if callable(identifier):
         return identifier
