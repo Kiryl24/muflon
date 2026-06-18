@@ -1,4 +1,5 @@
 <img alt="logo.png" height="50" src="logo.png" width="50"/> 
+
 # MUFLON: Matrix Utility for Intuitionistic Fuzzy Relational Equations
 
 MUFLON is a Python library for computations with intuitionistic fuzzy values and intuitionistic fuzzy relational systems of equations. 
@@ -6,26 +7,26 @@ MUFLON is a Python library for computations with intuitionistic fuzzy values and
 The library treats an intuitionistic fuzzy value as a pair
 
 
-$$(\mu,\nu)\in L^*,\qquad L^*=\{(\mu,\nu)\in[0,1]^2:\mu+\nu\le 1\}.$$
+$(\mu,\nu)\in L^{*},\qquad L^{*}=\{(\mu,\nu)\in[0,1]^2:\mu+\nu\le 1\}$
 
 
 The first coordinate $(\mu)$ is the membership degree, and the second coordinate $(\nu)$ is the non-membership degree. Every input and output pair should satisfy the condition
 
-$$\mu+\nu\le 1.$$
+$\mu+\nu\le 1.$
 
 ## Mathematical model
 
 The library supports intuitionistic fuzzy relational systems of the form
 
-$$A^{\vee,*}_{\wedge,\diamond}\circ x=b.$$
+$A^{\vee,{*}}_{\wedge,\diamond}\circ x=b.$
 
 The system is decomposed into two fuzzy relational systems:
 
-$$\max_j(a^{\mu}_{ij}*x^{\mu}_j)=b^{\mu}_i,$$
+$\max_j(a^{\mu}_{ij}*x^{\mu}_j)=b^{\mu}_i,$
 
 and
 
-$$\min_j(a^{\nu}_{ij}\diamond x^{\nu}_j)=b^{\nu}_i.$$
+$\min_j(a^{\nu}_{ij}\diamond x^{\nu}_j)=b^{\nu}_i.$
 
 Here (*) is the membership operation and $(\diamond)$ is the non-membership operation. In the most common cases, $(*)$ is a t-norm and $(\diamond)$ is its dual t-conorm, for example $(T_M,S_M)$, $(T_P,S_P)$, or $(T_L,S_L)$. More generally, the operations should satisfy the assumptions required for the corresponding fuzzy relational equation.
 
@@ -107,7 +108,7 @@ $$\max_j(a^{\mu}_{ij}*x^{\mu}_j)=b^{\mu}_i,$$
 
 the candidate for the greatest membership solution is computed by the induced implication:
 
-$$u^{\mu}_j=\min_i(a^{\mu}_{ij}\to_* b^{\mu}_i).$$
+$$u^{\mu}_j=\min_i(a^{\mu}_{ij}\to_{*} b^{\mu}_i).$$
 
 For the non-membership system
 
@@ -150,7 +151,7 @@ is_valid, sums = validate_l_star_condition(
 )
 ```
 
-The term `least_nonmembership_solution` means the least solution of the non-membership component in the usual order on $([0,1])$. Together with the greatest membership solution it forms a candidate for the greatest solution in the intuitionistic order. This candidate must satisfy the $(L^*)$ condition.
+The term `least_nonmembership_solution` means the least solution of the non-membership component in the usual order on $([0,1])$. Together with the greatest membership solution it forms a candidate for the greatest solution in the intuitionistic order. This candidate must satisfy the $(L^{*})$ condition.
 
 ## Available operators
 
@@ -195,6 +196,6 @@ The function `find_minimal_component_solutions()` concerns one component system.
 1. A joined matrix of pairs is not automatically a valid intuitionistic fuzzy matrix. It is valid only if every pair satisfies $(\mu+\nu\le 1)$.
 2. The membership component should use induced implications such as `IMP_T_M`, `IMP_T_P`, or `IMP_T_L`.
 3. The non-membership component should use dual induced implications such as `DIMP_S_M`, `DIMP_S_P`, or `DIMP_S_L`.
-4. The non-membership operation should be described as $(\diamond)$, not simply as an arbitrary s-conorm. In standard dual cases, $(\diamond)$ is the t-conorm dual to $(*)$.
+4. The non-membership operation should be described as $(\diamond)$, not simply as an arbitrary s-conorm. In standard dual cases, $(\diamond)$ is the t-conorm dual to $({*})$.
 5. If a complement transformation $(1-\nu)$ is used in an algorithm, it must be explicitly implemented and documented. Otherwise, the description should not claim that such a transformation is automatic.
 
