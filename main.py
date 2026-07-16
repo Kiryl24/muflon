@@ -3,7 +3,7 @@ import pandas as pd
 
 from muflon.data_io import (
     parse_ifs_csv_to_components,
-    save_separate_results_to_csv,
+    save_component_results_as_ifs_csv,
     save_joined_results_to_csv,
 )
 
@@ -152,7 +152,7 @@ def test_composition_separate():
     print("Non-membership result:")
     print(nonmembership_result)
 
-    save_separate_results_to_csv(
+    save_component_results_as_ifs_csv(
         membership_result,
         nonmembership_result,
         "Test_Composition_Separate.csv",
@@ -257,7 +257,7 @@ def test_system_candidate_separate():
     is_full_solution = is_membership_solution and is_nonmembership_solution
 
     if is_full_solution:
-        save_separate_results_to_csv(
+        save_component_results_as_ifs_csv(
             greatest_membership_solution,
             least_nonmembership_solution,
             "Test_System_Solution_Separate.csv",
