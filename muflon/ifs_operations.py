@@ -29,7 +29,6 @@ def compose_component_matrices(A, B, component_ops, aggregation):
 def solve_component_system(A, b, impl_func, aggregator_func):
     """
     Finds vector x in equation: A * x = b
-    Using Theorem 9: g_j = Aggregator_i( Implication(a_ij, b_i) )
     """
     rows_A, cols_A = A.shape
     rows_b = b.shape[0]
@@ -77,7 +76,7 @@ def binarize_reduced_matrix(A_reduced):
     return np.where(A_reduced > 0, 1.0, 0.0)
 
 
-def find_minimal_component_solutions(A, b, A_reduced, di_norm_func, norm_func, mode='eq'):
+def find_minimal_component_solutions(A, b, A_reduced, dual_implication_func, operation_func, mode='eq'):
 
     rows_A, cols_A = A.shape
     b_flat = b.flatten()
@@ -100,7 +99,7 @@ def find_minimal_component_solutions(A, b, A_reduced, di_norm_func, norm_func, m
 
         for k_i in valid_cols:
             v_next = current_v.copy()
-            val = di_norm_func(A[i, k_i], b_flat[i])
+            val = dual_implication_func(A[i, k_i], b_flat[i])
             v_next[k_i] = max(v_next[k_i], val)
 
             K_next = current_K.union({k_i})
@@ -109,7 +108,7 @@ def find_minimal_component_solutions(A, b, A_reduced, di_norm_func, norm_func, m
             for s in current_V:
                 if s == i:
                     continue
-                if norm_func(A_reduced[s, k_i], v_next[k_i]) < b_flat[s] - 1e-6:
+                if operation_func(A_reduced[s, k_i], v_next[k_i]) < b_flat[s] - 1e-6:
                     V_next.append(s)
 
             step(V_next, K_next, v_next)
@@ -146,9 +145,7 @@ def validate_l_star_condition(membership_matrix, nonmembership_matrix, tolerance
     return is_valid, sum_matrix
 
 def combine_components_to_ifs(mu_matrix, nu_matrix):
-    """
-    Combination back to tuples.
-    """
+
     rows, cols = mu_matrix.shape
     combined = np.empty((rows, cols), dtype=object)
     for i in range(rows):
@@ -157,17 +154,20 @@ def combine_components_to_ifs(mu_matrix, nu_matrix):
     return combined
 
 def compose_ifs_matrices(A_mu, A_nu, B_mu, B_nu, membership_ops, nonmembership_ops):
-    """
-    Composition and output to tuples.
-    """
+
     membership_result = compose_component_matrices(A_mu, B_mu, membership_ops, np.max)
     nonmembership_result = compose_component_matrices(A_nu, B_nu, nonmembership_ops, np.min)
     return combine_components_to_ifs(membership_result, nonmembership_result)
 
-def solve_ifs_system_candidate(A_mu, A_nu, b_mu, b_nu, induced_implication_mu, dual_induced_implication_nu):
-    """
-    Finding vector and output to tuples
-    """
-    greatest_membership_solution = solve_component_system(A_mu, b_mu, induced_implication_mu, np.min)
-    least_nonmembership_solution = solve_component_system(A_nu, b_nu, dual_induced_implication_nu, np.max)
+def solve_ifs_system_candidate(A_mu, A_nu, b_mu, b_nu, membership_implication, dual_membership_implication):
+    greatest_membership_solution = solve_component_system(
+        A_mu, b_mu,
+        impl_func=membership_implication,
+        aggregator_func=np.min
+    )
+    least_nonmembership_solution = solve_component_system(
+        A_nu, b_nu,
+        impl_func=dual_membership_implication,
+        aggregator_func=np.max
+    )
     return combine_components_to_ifs(greatest_membership_solution, least_nonmembership_solution)

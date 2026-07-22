@@ -1,7 +1,7 @@
 from .data_io import (
     parse_ifs_csv_to_components,
     save_component_results_as_ifs_csv,
-    save_joined_results_to_csv
+    save_ifs_matrix_to_csv
 )
 
 from .ifs_operations import (

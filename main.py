@@ -209,14 +209,14 @@ def test_system_candidate_separate():
         A_membership,
         b_membership,
         membership_implication,
-        aggregation=np.min,
+        aggregator_func=np.min,
     )
 
     least_nonmembership_solution = solve_component_system(
         A_nonmembership,
         b_nonmembership,
         nonmembership_dual_implication,
-        aggregation=np.max,
+        aggregator_func=np.max,
     )
 
     print("Greatest membership solution candidate:")

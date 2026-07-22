@@ -4,7 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9f4315e8-c206-4856-b05b-f80f441fa045" name="Changes" comment="" />
+    <list default="true" id="9f4315e8-c206-4856-b05b-f80f441fa045" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/matrix_test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/muflon/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/muflon/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/muflon/data_io.py" beforeDir="false" afterPath="$PROJECT_DIR$/muflon/data_io.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/muflon/ifs_operations.py" beforeDir="false" afterPath="$PROJECT_DIR$/muflon/ifs_operations.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/muflon/ifs_operators.py" beforeDir="false" afterPath="$PROJECT_DIR$/muflon/ifs_operators.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyproject.toml" beforeDir="false" afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -39,6 +50,8 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python tests.Python tests in main.py.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests in test.py.executor&quot;: &quot;Run&quot;,
     &quot;Python.Main_block_depreciated.executor&quot;: &quot;Run&quot;,
     &quot;Python.main.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,

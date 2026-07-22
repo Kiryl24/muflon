@@ -46,7 +46,7 @@ def save_component_results_as_ifs_csv(mu_matrix, nu_matrix, filename="Result_Sep
     print(f"File saved (from separate matrices): {filename}")
 
 
-def save_joined_results_to_csv(ifs_matrix, filename="Result_Joined.csv"):
+def save_ifs_matrix_to_csv(ifs_matrix, filename="Result_Joined.csv"):
     rows, cols = ifs_matrix.shape
     combined_data = np.empty((rows, cols), dtype=object)
 
