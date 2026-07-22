@@ -8,7 +8,6 @@ from muflon.ifs_operators import get_operator
 
 
 def run_test_3x3():
-    # Definiujemy prosty system dla T_M (max-min)
     A = np.array([
         [0.5, 0.8, 0.2],
         [0.1, 0.5, 0.9],
@@ -22,12 +21,10 @@ def run_test_3x3():
 
     print("--- Testowanie układu A(3x3) * x = b(3x1) ---")
 
-    # 1. Obliczanie elementu największego
     x_greatest = solve_component_system(A, b, impl_func=imp_t_m, aggregator_func=np.min)
     print("Rozwiązanie największe:")
     print(x_greatest)
 
-    # 2. Obliczanie elementów minimalnych
     A_reduced = compute_reduced_matrix(A, x_greatest, b, norm_func=t_m, mode='eq')
     minimal_sols = find_minimal_component_solutions(
         A, b, A_reduced,
