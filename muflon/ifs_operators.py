@@ -63,9 +63,15 @@ def IMP_EX1(a, b):
         res = np.where(a**2 <= b, 1.0, b / a)
     return res
 def DIMP_EX1(a, b):
+    a, b = np.broadcast_arrays(
+        np.asarray(a, dtype=float),
+        np.asarray(b, dtype=float)
+    )
+
     with np.errstate(divide='ignore', invalid='ignore'):
-        res = np.where(a**2 > b, b / a, a)
-    return res
+        value = np.where(a > 0, b / a, 0.0)
+
+    return np.where(b <= a**2, value, np.nan)
 
 NORM_MAP = {
     'T_M': t_M, 'T_P': t_P, 'T_L': t_L, 'T_D': t_D, 'T_FD': t_FD,

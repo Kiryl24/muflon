@@ -7,8 +7,9 @@
     <list default="true" id="9f4315e8-c206-4856-b05b-f80f441fa045" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/matrix_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/matrix_test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyproject.toml" beforeDir="false" afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/muflon/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/muflon/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/muflon/data_io.py" beforeDir="false" afterPath="$PROJECT_DIR$/muflon/data_io.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/muflon/ifs_operators.py" beforeDir="false" afterPath="$PROJECT_DIR$/muflon/ifs_operators.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
