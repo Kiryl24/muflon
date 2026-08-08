@@ -171,3 +171,55 @@ def solve_ifs_system_candidate(A_mu, A_nu, b_mu, b_nu, membership_implication, d
         aggregator_func=np.max
     )
     return combine_components_to_ifs(greatest_membership_solution, least_nonmembership_solution)
+
+"""
+!!!CHANGES DURING PUBLICATION!!! -> Added function to find minimal solutions
+"""
+
+def find_ifs_minimal_solutions(A_mu, b_mu, A_nu, b_nu, t_norm_func, impl_t_norm_func):
+    """
+    Kompleksowo wyznacza rozwiązania minimalne dla systemów równań IFS,
+    wykorzystując podane macierze i operatory.
+    """
+    # Wyznaczenie kandydata na rozwiązanie największe dla 'mu'
+    x_mu_candidate = solve_component_system(
+        A_mu, b_mu, impl_func=impl_t_norm_func, aggregator_func=np.min
+    )
+
+    # Wyznaczenie kandydata dla 'nu' (na podstawie dopełnień)
+    A_nu_comp = 1.0 - A_nu
+    b_nu_comp = 1.0 - b_nu
+    x_comp_candidate = solve_component_system(
+        A_nu_comp, b_nu_comp, impl_func=impl_t_norm_func, aggregator_func=np.min
+    )
+    x_nu_candidate = 1.0 - x_comp_candidate
+
+    is_valid_candidate, _ = validate_l_star_condition(x_mu_candidate, x_nu_candidate)
+
+    A_mu_reduced = compute_reduced_matrix(A_mu, x_mu_candidate, b_mu, norm_func=t_norm_func, mode='eq')
+    minimal_mu_solutions = find_minimal_component_solutions(
+        A_mu, b_mu, A_mu_reduced, impl_t_norm_func, t_norm_func, 'eq'
+    )
+
+    A_reduced_comp = compute_reduced_matrix(
+        A_nu_comp, x_comp_candidate, b_nu_comp, norm_func=t_norm_func, mode='eq'
+    )
+    minimal_comp_solutions = find_minimal_component_solutions(
+        A_nu_comp, b_nu_comp, A_reduced_comp, impl_t_norm_func, t_norm_func, 'eq'
+    )
+    maximal_nu_solutions = [1.0 - sol for sol in minimal_comp_solutions]
+
+    ifs_minimal_solutions = []
+    for mu_sol in minimal_mu_solutions:
+        for nu_sol in maximal_nu_solutions:
+            is_valid_min, _ = validate_l_star_condition(mu_sol, nu_sol)
+            if is_valid_min:
+                ifs_minimal_solutions.append((mu_sol, nu_sol))
+
+    return {
+        "is_valid_candidate": is_valid_candidate,
+        "x_max": (x_mu_candidate, x_nu_candidate),
+        "ifs_minimal_solutions": ifs_minimal_solutions,
+        "A_mu_reduced": A_mu_reduced,
+        "A_reduced_comp": A_reduced_comp
+    }

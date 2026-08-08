@@ -13,7 +13,8 @@ from .ifs_operations import (
     combine_components_to_ifs,
     compute_reduced_matrix,
     binarize_reduced_matrix,
-    find_minimal_component_solutions
+    find_minimal_component_solutions,
+    find_ifs_minimal_solutions
 )
 
 from .ifs_operators import get_operator
