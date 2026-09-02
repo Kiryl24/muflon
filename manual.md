@@ -1,3 +1,5 @@
+# User Manual for MUFLON
+
 The library treats an intuitionistic fuzzy value as a pair
 
 
