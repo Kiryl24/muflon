@@ -105,14 +105,14 @@ def test_composition_separate():
     print("\n--- TEST: Separate Composition ---")
 
     A_membership, A_nonmembership = load_ifs_csv(
-        "Data1.csv",
+        "TestingSources/Data1.csv",
         col_start=0,
         col_end=2,
         header_rows=1,
     )
 
     B_membership, B_nonmembership = load_ifs_csv(
-        "Data2.csv",
+        "TestingSources/Data2.csv",
         col_start=0,
         col_end=1,
         header_rows=1,
@@ -155,7 +155,7 @@ def test_composition_separate():
     save_component_results_as_ifs_csv(
         membership_result,
         nonmembership_result,
-        "Test_Composition_Separate.csv",
+        "TestingSources/Test_Composition_Separate.csv",
     )
 
     return membership_result, nonmembership_result
@@ -176,7 +176,7 @@ def test_composition_joined():
 
     save_joined_results_to_csv(
         ifs_result,
-        "Test_Composition_Joined.csv",
+        "TestingSources/Test_Composition_Joined.csv",
     )
 
     return ifs_result
@@ -186,14 +186,14 @@ def test_system_candidate_separate():
     print("\n--- TEST: Separate System Candidate ---")
 
     A_membership, A_nonmembership = load_ifs_csv(
-        "Data1.csv",
+        "TestingSources/Data1.csv",
         col_start=0,
         col_end=2,
         header_rows=1,
     )
 
     b_membership, b_nonmembership = load_ifs_csv(
-        "Data2.csv",
+        "TestingSources/Data2.csv",
         col_start=0,
         col_end=1,
         header_rows=1,
@@ -301,7 +301,7 @@ def test_system_candidate_joined():
     else:
         save_joined_results_to_csv(
             ifs_candidate,
-            "Test_System_Candidate_Not_Solution.csv",
+            "TestingSources/Test_System_Candidate_Not_Solution.csv",
         )
         print(
             "The candidate was saved only for inspection, "
