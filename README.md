@@ -4,7 +4,7 @@
 
 Python library for computations with intuitionistic fuzzy values and intuitionistic fuzzy relational systems of equations.
 
-**Current version: 1.3.8**
+**Current version: 1.3.9**
 
 ## Installation
 
@@ -53,6 +53,6 @@ Integrity of package can be checked using `test.py` script, based on unittest li
 |Dual induced implication for `S_P`|`DIMP_S_P`|
 |Dual induced implication for `S_L`|`DIMP_S_L`|
 
-Additional information regarding mathematical operations and example usage can be found in manual.md in [GitHub repository.](https://github.com/Kiryl24/muflon)
+Additional information regarding mathematical operations and example usage can be found in [manual.md](https://github.com/Kiryl24/muflon/blob/main/manual.md) in [GitHub repository.](https://github.com/Kiryl24/muflon)
 
 TestingSources directory has prepared short dataframes to test functionality of library.
