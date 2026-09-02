@@ -54,3 +54,5 @@ Integrity of package can be checked using `test.py` script, based on unittest li
 |Dual induced implication for `S_L`|`DIMP_S_L`|
 
 Additional information regarding mathematical operations and example usage can be found in manual.md in [GitHub repository.](https://github.com/Kiryl24/muflon)
+
+TestingSources directory has prepared short dataframes to test functionality of library.
