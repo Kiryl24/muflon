@@ -2,8 +2,7 @@
 
 The library treats an intuitionistic fuzzy value as a pair
 
-
-$$(\mu,\nu)\in L^{*},\qquad L^{*}=\{(\mu,\nu)\in[0,1]^2:\mu+\nu\le 1\}$$
+$(\mu,\nu)\in L^{\ast},\qquad L^{\ast}=\{(\mu,\nu)\in[0,1]^2:\mu+\nu\le 1\}$
 
 The first coordinate $(\mu)$ is the membership degree, and the second coordinate $(\nu)$ is the non-membership degree. Every input and output pair should satisfy the condition
 
